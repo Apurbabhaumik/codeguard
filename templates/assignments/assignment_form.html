@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}New Assignment — CodeGuard{% endblock %}
+{% block content %}
+<div class="crumbs">
+    <a href="{% url 'dashboard' %}">Dashboard</a><span class="sep">/</span><span>New assignment</span>
+</div>
+<div class="page-head">
+    <div>
+        <h1>Create assignment</h1>
+        <p class="sub">Submissions at or above the similarity threshold are flagged automatically.</p>
+    </div>
+</div>
+
+<div class="card" style="max-width:680px;">
+    <form method="post">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        {% for field in form %}
+            <div class="field">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {{ field.errors }}
+            </div>
+        {% endfor %}
+        <div class="actions" style="margin-top:var(--s5)">
+            <button type="submit">Create assignment</button>
+            <a class="btn btn-secondary" href="{% url 'dashboard' %}">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

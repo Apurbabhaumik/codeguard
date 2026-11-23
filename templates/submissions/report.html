@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Similarity Report{% endblock %}
+{% block content %}
+<div class="crumbs">
+    {% if user.profile.is_instructor %}
+        <a href="{% url 'submissions:instructor_dashboard' slug=submission.assignment.slug %}">{{ submission.assignment.title }}</a>
+    {% else %}
+        <a href="{% url 'assignments:detail' slug=submission.assignment.slug %}">{{ submission.assignment.title }}</a>
+    {% endif %}
+    <span class="sep">/</span><span>Similarity report</span>
+</div>
+<div class="page-head">
+    <div>
+        <h1>Similarity report</h1>
+        <p class="sub">Submission by <strong>{{ submission.student.username }}</strong> for {{ submission.assignment.title }}</p>
+    </div>
+</div>
+
+<div class="hero-score {% if submission.max_similarity >= 70 %}risk-high{% elif submission.max_similarity >= 40 %}risk-mid{% else %}risk-low{% endif %}">
+    <div class="big">{{ submission.max_similarity|floatformat:1 }}%</div>
+    <div class="body">
+        <div class="label">Highest match</div>
+        <div class="meter" role="img" aria-label="{{ submission.max_similarity|floatformat:1 }} percent"><i style="--w:{{ submission.max_similarity|floatformat:0 }}%"></i></div>
+        <span class="flag">{% if submission.max_similarity >= 70 %}High similarity{% elif submission.max_similarity >= 40 %}Moderate{% else %}Low similarity{% endif %}</span>
+    </div>
+</div>
+
+{% if reports %}
+<div class="section-label" style="margin-top:var(--s5)">Compared with</div>
+<div class="table-wrap">
+    <table class="stack">
+        <thead>
+            <tr><th>Compared with</th><th class="num">Token %</th><th class="num">Structure %</th><th>Combined</th><th>Flagged</th></tr>
+        </thead>
+        <tbody>
+        {% for r in reports %}
+            <tr class="{% if r.combined_score >= 70 %}risk-high{% elif r.combined_score >= 40 %}risk-mid{% else %}risk-low{% endif %}">
+                <td data-label="Compared with">
+                    <span class="who">
+                    {% if r.submission_a_id == submission.id %}
+                        {{ r.submission_b.student.username }}
+                    {% else %}
+                        {{ r.submission_a.student.username }}
+                    {% endif %}
+                    </span>
+                </td>
+                <td data-label="Token %" class="num">{{ r.token_similarity|floatformat:1 }}%</td>
+                <td data-label="Structure %" class="num">{% if r.structure_similarity != None %}{{ r.structure_similarity|floatformat:1 }}%{% else %}—{% endif %}</td>
+                <td data-label="Combined">
+                    <div class="score no-flag">
+                        <span class="pct">{{ r.combined_score|floatformat:1 }}%</span>
+                        <span class="meter" role="img" aria-label="{{ r.combined_score|floatformat:1 }} percent"><i style="--w:{{ r.combined_score|floatformat:0 }}%"></i></span>
+                    </div>
+                </td>
+                <td data-label="Flagged">{% if r.flagged %}<span class="flag" style="--tone:var(--high)">Yes</span>{% else %}<span class="when">No</span>{% endif %}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+    <div class="empty">No other submissions to compare against yet — you're first in!</div>
+{% endif %}
+{% endblock %}

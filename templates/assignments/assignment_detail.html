@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}{{ assignment.title }} — CodeGuard{% endblock %}
+{% block content %}
+<div class="crumbs">
+    <a href="{% url 'assignments:list' %}">Assignments</a><span class="sep">/</span><span>{{ assignment.title }}</span>
+</div>
+
+<div class="page-head">
+    <div>
+        <h1>{{ assignment.title }}</h1>
+    </div>
+    {% if assignment.is_open %}
+        <a class="btn" href="{% url 'submissions:submit' slug=assignment.slug %}">Submit solution</a>
+    {% endif %}
+</div>
+
+<div class="meta-row">
+    <span class="chip">{{ assignment.get_language_display }}</span>
+    <span><span class="k">Deadline</span> <span class="v">{{ assignment.deadline }}</span></span>
+    {% if not assignment.is_open %}<span class="chip closed">Closed</span>{% endif %}
+</div>
+
+<div class="card">
+    <h3 class="section-label" style="margin-top:0">Brief</h3>
+    <div class="prose">{{ assignment.description|linebreaks }}</div>
+</div>
+{% endblock %}

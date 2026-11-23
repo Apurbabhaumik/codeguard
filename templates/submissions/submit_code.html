@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Submit — {{ assignment.title }}{% endblock %}
+{% block content %}
+<div class="crumbs">
+    <a href="{% url 'assignments:list' %}">Assignments</a><span class="sep">/</span>
+    <a href="{% url 'assignments:detail' slug=assignment.slug %}">{{ assignment.title }}</a><span class="sep">/</span><span>Submit</span>
+</div>
+<div class="page-head">
+    <div>
+        <h1>Submit solution</h1>
+        <p class="sub">{{ assignment.title }} · {{ assignment.get_language_display }} · one submission per student</p>
+    </div>
+</div>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    <div class="field">
+        <label for="{{ form.code.id_for_label }}">{{ form.code.label }}</label>
+        <div class="editor">
+            <div class="editor-bar">
+                <span class="file">solution &middot; {{ assignment.get_language_display }}</span>
+                <span>plain text</span>
+            </div>
+            {{ form.code }}
+            <div class="editor-status">
+                <span>Tab size 4 · no auto-wrap</span>
+                <span>max 50,000 characters</span>
+            </div>
+        </div>
+        {{ form.code.errors }}
+    </div>
+    <div class="actions" style="margin-top:var(--s4)">
+        <button type="submit">Submit for review</button>
+        <a class="btn btn-secondary" href="{% url 'assignments:detail' slug=assignment.slug %}">Cancel</a>
+    </div>
+</form>
+{% endblock %}

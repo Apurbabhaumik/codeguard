@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% block title %}CodeGuard — automated code review &amp; similarity analysis{% endblock %}
+{% block container_class %} landing{% endblock %}
+{% block content %}
+
+<section class="hero">
+    <div class="wrap">
+        <div class="eyebrow"><i></i>Plagiarism intelligence for programming courses</div>
+        <h1>Review code like a reviewer, not a <em>detective</em>.</h1>
+        <p class="lede">CodeGuard compares every submission against the rest of the class the moment it arrives, and puts the pairs that deserve a human look right at the top of your dashboard.</p>
+        <div class="hero-cta">
+            <a class="btn btn-lg" href="{% url 'accounts:signup' %}">Get started free</a>
+            <a class="btn btn-lg btn-secondary" href="{% url 'accounts:login' %}">Log in</a>
+        </div>
+
+        <div class="mock" aria-hidden="true">
+            <div class="mock-bar"><b>Fibonacci Sequence</b><span>flagging threshold 70%</span></div>
+            <div class="mock-row risk-high">
+                <span class="who">meera.k</span>
+                <div class="score"><span class="pct">92.4%</span><span class="meter"><i style="--w:92%"></i></span><span class="flag">Flagged</span></div>
+            </div>
+            <div class="mock-row risk-high">
+                <span class="who">arjun.s</span>
+                <div class="score"><span class="pct">88.1%</span><span class="meter"><i style="--w:88%"></i></span><span class="flag">Flagged</span></div>
+            </div>
+            <div class="mock-row risk-mid">
+                <span class="who">rohit.m</span>
+                <div class="score"><span class="pct">58.6%</span><span class="meter"><i style="--w:58%"></i></span><span class="flag">Review</span></div>
+            </div>
+            <div class="mock-row risk-low">
+                <span class="who">isha.n</span>
+                <div class="score"><span class="pct">21.5%</span><span class="meter"><i style="--w:21%"></i></span><span class="flag">Clear</span></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="wrap">
+        <div class="kicker">How it works</div>
+        <h2>From submission to signal in three steps</h2>
+        <p class="intro">No setup on the student side and nothing to run on the instructor side. Everything happens when a solution is submitted.</p>
+        <div class="steps">
+            <div class="step"><h3>Instructor posts an assignment</h3><p>Pick a language, a deadline and a similarity threshold. Anything at or above it gets flagged.</p></div>
+            <div class="step"><h3>Students submit once</h3><p>A code-editor style form, one submission per student, closed automatically at the deadline.</p></div>
+            <div class="step"><h3>CodeGuard compares instantly</h3><p>Each new submission is scored against every earlier one, and the results land on a risk-ranked dashboard.</p></div>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="wrap">
+        <div class="kicker">Built for review</div>
+        <h2>Everything a reviewer needs, nothing they don&rsquo;t</h2>
+        <div style="height:var(--s5)"></div>
+        <div class="features">
+            <div class="feature"><div class="ico">%</div><h3>Token similarity</h3><p>Comments and whitespace are stripped and identifiers normalized, so renaming a variable doesn&rsquo;t hide a copy. Works for any language.</p></div>
+            <div class="feature"><div class="ico">&lt;/&gt;</div><h3>Structural analysis</h3><p>For Python, the shape of the syntax tree is compared, catching code that was restructured but still does the same thing.</p></div>
+            <div class="feature"><div class="ico">!</div><h3>Risk-first dashboard</h3><p>Flagged submissions are tinted, edged and enlarged. Clear ones fade back, so the ones that matter are impossible to miss.</p></div>
+            <div class="feature"><div class="ico">&#9679;</div><h3>Per-pair reports</h3><p>Token, structure and combined scores for every comparison, so you can see exactly why something was flagged.</p></div>
+            <div class="feature"><div class="ico">&#9881;</div><h3>Role-based access</h3><p>Students see only their own report. Instructors see every report and the full dashboard.</p></div>
+            <div class="feature"><div class="ico">&#10003;</div><h3>Secure by default</h3><p>CSRF-protected forms, hashed passwords and session-based login on Django. Submitted code is stored as text and never executed.</p></div>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="wrap">
+        <div class="kicker">The engine</div>
+        <h2>Different names. Same logic. Caught.</h2>
+        <p class="intro">These two solutions share no variable or function names. CodeGuard still scores them as identical, because it compares what the code <em>does</em>, not what it&rsquo;s called.</p>
+        <div class="compare">
+            <div class="pane">
+                <div class="editor-bar"><span class="file">student_a.py</span><span>submission A</span></div>
+<pre>def <span class="rn">fib</span>(<span class="rn">n</span>):
+    <span class="rn">a</span>, <span class="rn">b</span> = 0, 1
+    for _ in range(<span class="rn">n</span>):
+        <span class="rn">a</span>, <span class="rn">b</span> = <span class="rn">b</span>, <span class="rn">a</span> + <span class="rn">b</span>
+    return <span class="rn">a</span></pre>
+            </div>
+            <div class="pane">
+                <div class="editor-bar"><span class="file">student_b.py</span><span>submission B</span></div>
+<pre>def <span class="rn">fibonacci</span>(<span class="rn">count</span>):
+    <span class="rn">prev</span>, <span class="rn">cur</span> = 0, 1
+    for i in range(<span class="rn">count</span>):
+        <span class="rn">prev</span>, <span class="rn">cur</span> = <span class="rn">cur</span>, <span class="rn">prev</span> + <span class="rn">cur</span>
+    return <span class="rn">prev</span></pre>
+            </div>
+        </div>
+        <div class="verdict risk-high">
+            <div class="score no-flag" style="grid-template-columns:auto"><span class="big">100.0%</span></div>
+            <p>Token similarity 100%, structure similarity 100%, combined 100%. Flagged at the default 70% threshold. A genuinely different recursive solution to the same problem scores about 46%.</p>
+        </div>
+    </div>
+</section>
+
+<section class="cta-final">
+    <div class="wrap">
+        <h2>Give your next assignment a second pair of eyes.</h2>
+        <p>Create an instructor account, post an assignment, and watch the dashboard fill in.</p>
+        <div class="hero-cta">
+            <a class="btn btn-lg" href="{% url 'accounts:signup' %}">Create an account</a>
+            <a class="btn btn-lg btn-secondary" href="{% url 'accounts:login' %}">Log in</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

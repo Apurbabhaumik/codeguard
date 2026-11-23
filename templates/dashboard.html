@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — CodeGuard{% endblock %}
+{% block content %}
+
+{% if is_instructor %}
+    <div class="page-head">
+        <div>
+            <h1>Your assignments</h1>
+            <p class="sub">Open an assignment to review submissions and similarity scores.</p>
+        </div>
+        <a class="btn" href="{% url 'assignments:create' %}">+ New assignment</a>
+    </div>
+
+    <div class="item-list">
+    {% for a in assignments %}
+        <div class="item">
+            <div>
+                <div class="title"><a href="{% url 'submissions:instructor_dashboard' slug=a.slug %}">{{ a.title }}</a></div>
+                <div class="meta">
+                    <span class="chip">{{ a.get_language_display }}</span>
+                    <span>Deadline {{ a.deadline }}</span>
+                </div>
+            </div>
+            <div class="aside">
+                <div class="count"><strong>{{ a.submission_count }}</strong>submission(s)</div>
+                <svg class="chev" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="m6 3 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+        </div>
+    {% empty %}
+        <div class="empty">You haven't created any assignments yet.</div>
+    {% endfor %}
+    </div>
+
+{% else %}
+    <div class="page-head">
+        <div>
+            <h1>Available assignments</h1>
+            <p class="sub">Pick an assignment to read the brief and submit your solution.</p>
+        </div>
+    </div>
+
+    <div class="item-list">
+    {% for a in assignments %}
+        <div class="item">
+            <div>
+                <div class="title"><a href="{% url 'assignments:detail' slug=a.slug %}">{{ a.title }}</a></div>
+                <div class="meta">
+                    <span class="chip">{{ a.get_language_display }}</span>
+                    <span>Deadline: {{ a.deadline }}</span>
+                    {% if a.id in submitted_ids %}
+                        <span class="chip ok">Submitted</span>
+                    {% elif not a.is_open %}
+                        <span class="chip closed">Closed</span>
+                    {% endif %}
+                </div>
+            </div>
+            <svg class="chev" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="m6 3 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+    {% empty %}
+        <div class="empty">No assignments available right now.</div>
+    {% endfor %}
+    </div>
+{% endif %}
+
+{% endblock %}

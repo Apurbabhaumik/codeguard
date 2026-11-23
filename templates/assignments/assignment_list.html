@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Assignments — CodeGuard{% endblock %}
+{% block content %}
+<div class="page-head">
+    <div>
+        <h1>All assignments</h1>
+    </div>
+</div>
+
+<div class="item-list">
+{% for a in assignments %}
+    <div class="item">
+        <div>
+            <div class="title"><a href="{% url 'assignments:detail' slug=a.slug %}">{{ a.title }}</a></div>
+            <div class="meta"><span class="chip">{{ a.get_language_display }}</span></div>
+        </div>
+        <svg class="chev" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="m6 3 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+{% empty %}
+    <div class="empty">No assignments yet.</div>
+{% endfor %}
+</div>
+{% endblock %}
